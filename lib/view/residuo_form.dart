@@ -84,7 +84,7 @@ class _ResiduoFormState extends State<ResiduoForm> {
       setState(() {});
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar opções: $e')),
+        SnackBar(content: Text('Erro ao carregar opções: $e')) ,
       );
     }
   }
@@ -132,81 +132,79 @@ class _ResiduoFormState extends State<ResiduoForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Cadastrar Resíduo')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nomeResiduoController,
-                  decoration: const InputDecoration(labelText: 'Nome do Resíduo'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Este campo é obrigatório' : null,
-                ),
-                TextFormField(
-                  controller: _quantidadeController,
-                  decoration: const InputDecoration(labelText: 'Quantidade'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Este campo é obrigatório';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'Por favor, insira um número válido';
-                    }
-                    return null;
-                  },
-                ),
-                _buildDropdown(
-                  'Código Acondicionamento',
-                  acondicionamentoOptions,
-                  _selectedAcondicionamento,
-                  (value) => setState(() => _selectedAcondicionamento = value),
-                ),
-                _buildDropdown(
-                  'Código Classe',
-                  classeOptions,
-                  _selectedClasse,
-                  (value) => setState(() => _selectedClasse = value),
-                ),
-                _buildDropdown(
-                  'Código Estado Físico',
-                  estadoFisicoOptions,
-                  _selectedEstadoFisico,
-                  (value) => setState(() => _selectedEstadoFisico = value),
-                ),
-                _buildDropdown(
-                  'Código Resíduo',
-                  residuoOptions,
-                  _selectedResiduo,
-                  (value) => setState(() => _selectedResiduo = value),
-                ),
-                _buildDropdown(
-                  'Código Tecnologia',
-                  tecnologiaOptions,
-                  _selectedTecnologia,
-                  (value) => setState(() => _selectedTecnologia = value),
-                ),
-                _buildDropdown(
-                  'Código Unidade',
-                  unidadeOptions,
-                  _selectedUnidade,
-                  (value) => setState(() => _selectedUnidade = value),
-                ),
-                TextFormField(
-                  controller: _observacaoController,
-                  decoration: const InputDecoration(labelText: 'Observação (opcional)'),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _saveResiduo,
-                  child: const Text('Salvar'),
-                ),
-              ],
-            ),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nomeResiduoController,
+                decoration: const InputDecoration(labelText: 'Nome do Resíduo'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Este campo é obrigatório' : null,
+              ),
+              TextFormField(
+                controller: _quantidadeController,
+                decoration: const InputDecoration(labelText: 'Quantidade'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Este campo é obrigatório';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return 'Por favor, insira um número válido';
+                  }
+                  return null;
+                },
+              ),
+              _buildDropdown(
+                'Código Acondicionamento',
+                acondicionamentoOptions,
+                _selectedAcondicionamento,
+                (value) => setState(() => _selectedAcondicionamento = value),
+              ),
+              _buildDropdown(
+                'Código Classe',
+                classeOptions,
+                _selectedClasse,
+                (value) => setState(() => _selectedClasse = value),
+              ),
+              _buildDropdown(
+                'Código Estado Físico',
+                estadoFisicoOptions,
+                _selectedEstadoFisico,
+                (value) => setState(() => _selectedEstadoFisico = value),
+              ),
+              _buildDropdown(
+                'Código Resíduo',
+                residuoOptions,
+                _selectedResiduo,
+                (value) => setState(() => _selectedResiduo = value),
+              ),
+              _buildDropdown(
+                'Código Tecnologia',
+                tecnologiaOptions,
+                _selectedTecnologia,
+                (value) => setState(() => _selectedTecnologia = value),
+              ),
+              _buildDropdown(
+                'Código Unidade',
+                unidadeOptions,
+                _selectedUnidade,
+                (value) => setState(() => _selectedUnidade = value),
+              ),
+              TextFormField(
+                controller: _observacaoController,
+                decoration: const InputDecoration(labelText: 'Observação (opcional)'),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _saveResiduo,
+                child: const Text('Salvar'),
+              ),
+            ],
           ),
         ),
       ),
