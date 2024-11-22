@@ -25,15 +25,19 @@ class _LoginViewState extends State<LoginView> {
       authService: AuthService(),
       messageNotifier: messageNotifier,
       navigateToMainView: _navigateToMainView,
+      context: context,
     );
+
+    // Verificar credenciais da FEPAM
+    _presenter.checkFepamCredentials();
   }
 
   // Função para navegar para a tela MainView
   void _navigateToMainView() {
      Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => const MainView()),
-  );
+      context,
+      MaterialPageRoute(builder: (context) => const MainView()),
+    );
   }
 
   @override

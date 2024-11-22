@@ -135,10 +135,20 @@ class _MainViewState extends State<MainView> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ResiduoForm()),
-  );
+        onPressed: () async {
+          final novoResiduo = await Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const ResiduoForm()),
+          );
+
+          if (novoResiduo != null) {
+            setState(() {
+              residuos.add(novoResiduo);
+            });
+
+            _presenter.createResiduo(novoResiduo);
+          }
         },
+        
         child: const Icon(Icons.add),
       ),
     );
