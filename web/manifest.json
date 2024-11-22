@@ -1,6 +1,6 @@
 {
-    "name": "gerenciador_residuos_frontend",
-    "short_name": "gerenciador_residuos_frontend",
+    "name": "gerenciador_residuos_front",
+    "short_name": "gerenciador_residuos_front",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

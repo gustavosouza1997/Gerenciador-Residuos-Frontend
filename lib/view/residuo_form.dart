@@ -1,8 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:gerenciador_residuos_frontend/services/mtr_service.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart'; 
+import '../services/mtr_service.dart';
 
 class ResiduoForm extends StatefulWidget {
   const ResiduoForm({super.key});
@@ -12,13 +11,12 @@ class ResiduoForm extends StatefulWidget {
 }
 
 class _ResiduoFormState extends State<ResiduoForm> {
-  //final ResiduoService _residuoService = ResiduoService();
   final MTRService _mtrService = MTRService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nomeResiduoController = TextEditingController();
   final TextEditingController _observacaoController = TextEditingController();
   final TextEditingController _quantidadeController = TextEditingController();
-
+  
   String? _selectedAcondicionamento;
   String? _selectedClasse;
   String? _selectedEstadoFisico;
@@ -41,35 +39,47 @@ class _ResiduoFormState extends State<ResiduoForm> {
 
   Future<void> _loadOptions() async {
     try {
-      acondicionamentoOptions = (await _mtrService.fetchAcondicionamento()).map((item) => {
-        'codigo': item['tipoCodigo'].toString(),
-        'descricao': item['tipoDescricao'],
-      }).toList();
+      acondicionamentoOptions = (await _mtrService.fetchAcondicionamento())
+          .map((item) => {
+                'codigo': item['tipoCodigo'].toString(),
+                'descricao': item['tipoDescricao'],
+              })
+          .toList();
 
-      classeOptions = (await _mtrService.fetchClasse()).map((item) => {
-        'codigo': item['tpclaCodigo'].toString(),
-        'descricao': item['tpclaDescricao'],
-      }).toList();
+      classeOptions = (await _mtrService.fetchClasse())
+          .map((item) => {
+                'codigo': item['tpclaCodigo'].toString(),
+                'descricao': item['tpclaDescricao'],
+              })
+          .toList();
 
-      estadoFisicoOptions = (await _mtrService.fetchEstadoFisico()).map((item) => {
-      'codigo': item['tpestCodigo'].toString(),
-      'descricao': item['tpestDescricao'],
-    }).toList();
+      estadoFisicoOptions = (await _mtrService.fetchEstadoFisico())
+          .map((item) => {
+                'codigo': item['tpestCodigo'].toString(),
+                'descricao': item['tpestDescricao'],
+              })
+          .toList();
 
-    tecnologiaOptions = (await _mtrService.fetchTecnologia()).map((item) => {
-      'codigo': item['tipoCodigo'].toString(),
-      'descricao': item['tipoDescricao'],
-    }).toList();
+      tecnologiaOptions = (await _mtrService.fetchTecnologia())
+          .map((item) => {
+                'codigo': item['tipoCodigo'].toString(),
+                'descricao': item['tipoDescricao'],
+              })
+          .toList();
 
-    unidadeOptions = (await _mtrService.fetchUnidade()).map((item) => {
-      'codigo': item['tpuniCodigo'].toString(),
-      'descricao': item['tpuniDescricao'],
-    }).toList();
+      unidadeOptions = (await _mtrService.fetchUnidade())
+          .map((item) => {
+                'codigo': item['tpuniCodigo'].toString(),
+                'descricao': item['tpuniDescricao'],
+              })
+          .toList();
 
-      residuoOptions = (await _mtrService.fetchResiduo()).map((item) => {
-        'codigo': item['tpre3Numero'],
-        'descricao': item['tpre3Descricao'],
-      }).toList();
+      residuoOptions = (await _mtrService.fetchResiduo())
+          .map((item) => {
+                'codigo': item['tpre3Numero'],
+                'descricao': item['tpre3Descricao'],
+              })
+          .toList();
 
       setState(() {});
     } catch (e) {
@@ -97,6 +107,27 @@ class _ResiduoFormState extends State<ResiduoForm> {
     }
   }
 
+  Widget _buildDropdown(
+    String label,
+    List<Map<String, dynamic>> options,
+    String? selectedValue,
+    ValueChanged<String?> onChanged,
+  ) {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(labelText: label),
+      value: selectedValue,
+      items: options
+          .map((option) => DropdownMenuItem<String>(
+                value: option['codigo'],
+                child: Text('${option['codigo']} - ${option['descricao']}'),
+              ))
+          .toList(),
+      onChanged: onChanged,
+      validator: (value) =>
+          value == null ? 'Por favor, selecione uma opção' : null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,8 +136,8 @@ class _ResiduoFormState extends State<ResiduoForm> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView( // Permite o scroll no formulário
-            child: Column( // Usar Column dentro do SingleChildScrollView
+          child: SingleChildScrollView(
+            child: Column(
               children: [
                 TextFormField(
                   controller: _nomeResiduoController,
@@ -128,37 +159,37 @@ class _ResiduoFormState extends State<ResiduoForm> {
                     return null;
                   },
                 ),
-                _buildTypeAheadDropdown(
+                _buildDropdown(
                   'Código Acondicionamento',
                   acondicionamentoOptions,
                   _selectedAcondicionamento,
                   (value) => setState(() => _selectedAcondicionamento = value),
                 ),
-                _buildTypeAheadDropdown(
+                _buildDropdown(
                   'Código Classe',
                   classeOptions,
                   _selectedClasse,
                   (value) => setState(() => _selectedClasse = value),
                 ),
-                _buildTypeAheadDropdown(
+                _buildDropdown(
                   'Código Estado Físico',
                   estadoFisicoOptions,
                   _selectedEstadoFisico,
                   (value) => setState(() => _selectedEstadoFisico = value),
                 ),
-                _buildTypeAheadDropdown(
+                _buildDropdown(
                   'Código Resíduo',
                   residuoOptions,
                   _selectedResiduo,
                   (value) => setState(() => _selectedResiduo = value),
                 ),
-                _buildTypeAheadDropdown(
+                _buildDropdown(
                   'Código Tecnologia',
                   tecnologiaOptions,
                   _selectedTecnologia,
                   (value) => setState(() => _selectedTecnologia = value),
                 ),
-                _buildTypeAheadDropdown(
+                _buildDropdown(
                   'Código Unidade',
                   unidadeOptions,
                   _selectedUnidade,
@@ -179,37 +210,6 @@ class _ResiduoFormState extends State<ResiduoForm> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTypeAheadDropdown(
-    String label,
-    List<Map<String, dynamic>> options,
-    String? selectedValue,
-    ValueChanged<String?> onChanged,
-  ) {
-    return TypeAheadFormField<String>(
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: TextEditingController(text: selectedValue),
-        decoration: InputDecoration(labelText: label),
-      ),
-      suggestionsCallback: (pattern) {
-        return options
-            .where((option) => option['descricao']
-                .toLowerCase()
-                .contains(pattern.toLowerCase()))
-            .map<String>((option) => option['descricao'].toString());
-      },
-      itemBuilder: (context, suggestion) {
-        return ListTile(
-          title: Text(suggestion),
-        );
-      },
-      onSuggestionSelected: (suggestion) {
-        onChanged(suggestion);
-      },
-      validator: (value) =>
-          value == null || value.isEmpty ? 'Por favor, selecione uma opção' : null,
     );
   }
 }

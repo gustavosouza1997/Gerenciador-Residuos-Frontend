@@ -1,4 +1,4 @@
-package com.example.gerenciador_residuos_frontend
+package com.example.gerenciador_residuos_front
 
 import io.flutter.embedding.android.FlutterActivity
 
