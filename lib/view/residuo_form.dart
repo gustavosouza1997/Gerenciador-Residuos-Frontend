@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../services/mtr_service.dart';
 
 class ResiduoForm extends StatefulWidget {
@@ -16,6 +17,12 @@ class _ResiduoFormState extends State<ResiduoForm> {
   final TextEditingController _nomeResiduoController = TextEditingController();
   final TextEditingController _observacaoController = TextEditingController();
   final TextEditingController _quantidadeController = TextEditingController();
+  final TextEditingController _codigoAcondicionamentoController = TextEditingController();
+  final TextEditingController _codigoClasseController = TextEditingController();
+  final TextEditingController _codigoEstadoFisicoController = TextEditingController();
+  final TextEditingController _codigoResiduoController = TextEditingController();
+  final TextEditingController _codigoTecnologiaController = TextEditingController();
+  final TextEditingController _codigoUnidadeController = TextEditingController();
   
   String? _selectedAcondicionamento;
   String? _selectedClasse;
@@ -107,28 +114,8 @@ class _ResiduoFormState extends State<ResiduoForm> {
     }
   }
 
-  Widget _buildDropdown(
-    String label,
-    List<Map<String, dynamic>> options,
-    String? selectedValue,
-    ValueChanged<String?> onChanged,
-  ) {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(labelText: label),
-      value: selectedValue,
-      items: options
-          .map((option) => DropdownMenuItem<String>(
-                value: option['codigo'],
-                child: Text('${option['codigo']} - ${option['descricao']}'),
-              ))
-          .toList(),
-      onChanged: onChanged,
-      validator: (value) =>
-          value == null ? 'Por favor, selecione uma opção' : null,
-    );
-  }
 
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Cadastrar Resíduo')),
@@ -158,47 +145,169 @@ class _ResiduoFormState extends State<ResiduoForm> {
                   return null;
                 },
               ),
-              _buildDropdown(
-                'Código Acondicionamento',
-                acondicionamentoOptions,
-                _selectedAcondicionamento,
-                (value) => setState(() => _selectedAcondicionamento = value),
+
+              TypeAheadField<Map<String, dynamic>>(
+                suggestionsCallback: (search) => residuoOptions
+                  .where((option) => option['descricao'].toString().contains(search)).toList(),
+                controller: _codigoResiduoController,
+                builder: (context, controller, focusNode) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Código Resíduo',
+                    )
+                  );
+                },
+                itemBuilder: (context, value) {
+                  return ListTile(
+                    title: Text('${value['codigo']} - ${value['descricao']} '),
+                  );
+                },
+                onSelected: (selection) {
+                  setState(() {
+                    _selectedResiduo = selection['codigo'];
+                    _codigoResiduoController.text = '${selection['codigo']} - ${selection['descricao']} ';
+                  });
+                },
               ),
-              _buildDropdown(
-                'Código Classe',
-                classeOptions,
-                _selectedClasse,
-                (value) => setState(() => _selectedClasse = value),
+
+              TypeAheadField<Map<String, dynamic>>(
+                suggestionsCallback: (search) => unidadeOptions
+                  .where((option) => option['descricao'].toString().contains(search)).toList(),
+                controller: _codigoUnidadeController,
+                builder: (context, controller, focusNode) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Código Unidade',
+                    )
+                  );
+                },
+                itemBuilder: (context, value) {
+                  return ListTile(
+                    title: Text(value['descricao']),
+                  );
+                },
+                onSelected: (selection) {
+                  setState(() {
+                    _selectedUnidade = selection['codigo'];
+                    _codigoUnidadeController.text = selection['descricao'];
+                  });
+                },
               ),
-              _buildDropdown(
-                'Código Estado Físico',
-                estadoFisicoOptions,
-                _selectedEstadoFisico,
-                (value) => setState(() => _selectedEstadoFisico = value),
+
+              TypeAheadField<Map<String, dynamic>>(
+                suggestionsCallback: (search) => estadoFisicoOptions
+                  .where((option) => option['descricao'].toString().contains(search)).toList(),
+                controller: _codigoEstadoFisicoController,
+                builder: (context, controller, focusNode) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Código Estado Físico',
+                    )
+                  );
+                },
+                itemBuilder: (context, value) {
+                  return ListTile(
+                    title: Text(value['descricao']),
+                  );
+                },
+                onSelected: (selection) {
+                  setState(() {
+                    _selectedEstadoFisico = selection['codigo'];
+                    _codigoEstadoFisicoController.text = selection['descricao'];
+                  });
+                },
               ),
-              _buildDropdown(
-                'Código Resíduo',
-                residuoOptions,
-                _selectedResiduo,
-                (value) => setState(() => _selectedResiduo = value),
+
+              TypeAheadField<Map<String, dynamic>>(
+                suggestionsCallback: (search) => classeOptions
+                  .where((option) => option['descricao'].toString().contains(search)).toList(),
+                controller: _codigoClasseController,
+                builder: (context, controller, focusNode) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Código Classe',
+                    )
+                  );
+                },
+                itemBuilder: (context, value) {
+                  return ListTile(
+                    title: Text(value['descricao']),
+                  );
+                },
+                onSelected: (selection) {
+                  setState(() {
+                    _selectedClasse = selection['codigo'];
+                    _codigoClasseController.text = selection['descricao'];
+                  });
+                },
               ),
-              _buildDropdown(
-                'Código Tecnologia',
-                tecnologiaOptions,
-                _selectedTecnologia,
-                (value) => setState(() => _selectedTecnologia = value),
+
+              TypeAheadField<Map<String, dynamic>>(
+                suggestionsCallback: (search) => acondicionamentoOptions
+                  .where((option) => option['descricao'].toString().contains(search)).toList(),
+                controller: _codigoAcondicionamentoController,
+                builder: (context, controller, focusNode) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Código Acondicionamento',
+                    )
+                  );
+                },
+                itemBuilder: (context, value) {
+                  return ListTile(
+                    title: Text(value['descricao']),
+                  );
+                },
+                onSelected: (selection) {
+                  setState(() {
+                    _selectedAcondicionamento = selection['codigo'];
+                    _codigoAcondicionamentoController.text = selection['descricao'];
+                  });
+                },
               ),
-              _buildDropdown(
-                'Código Unidade',
-                unidadeOptions,
-                _selectedUnidade,
-                (value) => setState(() => _selectedUnidade = value),
+
+              TypeAheadField<Map<String, dynamic>>(
+                suggestionsCallback: (search) => tecnologiaOptions
+                  .where((option) => option['descricao'].toString().contains(search)).toList(),
+                controller: _codigoTecnologiaController,
+                builder: (context, controller, focusNode) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Código Tecnologia',
+                    )
+                  );
+                },
+                itemBuilder: (context, value) {
+                  return ListTile(
+                    title: Text(value['descricao']),
+                  );
+                },
+                onSelected: (selection) {
+                  setState(() {
+                    _selectedTecnologia = selection['codigo'];
+                    _codigoTecnologiaController.text = selection['descricao'];
+                  });
+                },
               ),
+
               TextFormField(
-                controller: _observacaoController,
-                decoration: const InputDecoration(labelText: 'Observação (opcional)'),
-                maxLines: 3,
+                 controller: _observacaoController,
+                 decoration: const InputDecoration(labelText: 'Observação (opcional)'),
+                 maxLines: 3,
               ),
+              
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _saveResiduo,

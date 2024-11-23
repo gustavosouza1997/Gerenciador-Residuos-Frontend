@@ -77,7 +77,7 @@ class ResiduoService {
   Map<String, dynamic> _processResponse(http.Response response) {
     if (response.statusCode == 200 || response.statusCode == 201) {
       if (response.body.isEmpty) {
-        return {'error': 'Resposta vazia do servidor'};
+        return {'error': 'Sucesso'};
       }
       try {
         final decodedResponse = json.decode(response.body);

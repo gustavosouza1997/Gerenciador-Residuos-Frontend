@@ -124,7 +124,12 @@ class _MainViewState extends State<MainView> {
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
                         color: Colors.red,
-                        onPressed: () => deleteResiduo(residuo['id']),
+                        onPressed: () => {
+                          deleteResiduo(residuo['id']),
+                          _presenter.loadResiduosNaoEnviados()
+                        },
+                        
+
                       ),
                     );
                   },
@@ -146,6 +151,7 @@ class _MainViewState extends State<MainView> {
             });
 
             _presenter.createResiduo(novoResiduo);
+            _presenter.loadResiduosNaoEnviados();
           }
         },
         
