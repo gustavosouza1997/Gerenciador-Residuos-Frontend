@@ -34,7 +34,7 @@ class _LoginViewState extends State<LoginView> {
 
   // Função para navegar para a tela MainView
   void _navigateToMainView() {
-     Navigator.pushReplacement(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const MainView()),
     );
@@ -43,35 +43,50 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Senha'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                await _presenter.login(emailController.text, passwordController.text);
-              },
-              child: const Text('Entrar'),
-            ),
-            const SizedBox(height: 20),
-            ValueListenableBuilder<String>(
-              valueListenable: messageNotifier,
-              builder: (context, message, child) {
-                return Text(message, style: const TextStyle(color: Colors.red));
-              },
-            ),
-          ],
+      backgroundColor: const Color(0xFF22C55E), // Set background color
+      body: Center(
+        child: Container( // Container for the white frame
+          padding: const EdgeInsets.all(24.0),
+          width: MediaQuery.of(context).size.width * 0.9,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0), // Add rounded corners
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Center content vertically
+            children: [
+              Image.asset('assets/logo.png',
+                width: 200,
+                height: 200,
+              ),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+              ),
+              TextField(
+                controller: passwordController,
+                decoration: const InputDecoration(labelText: 'Senha'),
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  await _presenter.login(emailController.text, passwordController.text);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF22C55E), // Set button color same as background
+                ),
+                child: const Text('Entrar'),
+              ),
+              const SizedBox(height: 20),
+              ValueListenableBuilder<String>(
+                valueListenable: messageNotifier,
+                builder: (context, message, child) {
+                  return Text(message, style: const TextStyle(color: Colors.red));
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

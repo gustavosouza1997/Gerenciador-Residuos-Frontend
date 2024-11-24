@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,10 +23,8 @@ class _FepamFormState extends State<FepamForm> {
       await prefs.setString('fepamLogin', _loginController.text);
       await prefs.setString('fepamPassword', _passwordController.text);
       await prefs.setString('fepamCnpj', _cnpjController.text);
-      // ignore: use_build_context_synchronously
       await prefs.setBool('isFepamConfigured', true);
 
-      // ignore: use_build_context_synchronously
       Navigator.pop(context, true);
     }
   }
