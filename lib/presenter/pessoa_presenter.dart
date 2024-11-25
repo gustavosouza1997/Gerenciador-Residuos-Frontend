@@ -13,7 +13,7 @@ class PessoaPresenter {
   });
 
   // Criar uma pessoa
-  Future<void> createResiduo(Map<String, dynamic> pessoaData) async {
+  Future<void> createPessoa(Map<String, dynamic> pessoaData) async {
     messageNotifier.value = 'Criando pessoa...';
 
     final result = await pessoaService.createPessoa(pessoaData);
@@ -26,7 +26,7 @@ class PessoaPresenter {
   }
 
   // Listar resíduos enviados
-  Future<void> loadAllResiduos() async {
+  void loadAllPessoas() async {
     messageNotifier.value = 'Carregando pessoas...';
 
     final result = await pessoaService.getAllPessoas();
@@ -40,7 +40,7 @@ class PessoaPresenter {
   }
 
   // Atualizar um resíduo
-  Future<void> updateResiduo(String id, Map<String, dynamic> updatedData) async {
+  Future<void> updatePessoa(String id, Map<String, dynamic> updatedData) async {
     messageNotifier.value = 'Atualizando pessoa...';
 
     final result = await pessoaService.updatePessoa(id, updatedData);
@@ -53,7 +53,7 @@ class PessoaPresenter {
   }
 
   // Excluir um resíduo
-  Future<void> deleteResiduo(String id) async {
+  Future<void> deletePessoa(String id) async {
     messageNotifier.value = 'Excluindo pessoa...';
 
     final result = await pessoaService.deletePessoa(id);
@@ -62,7 +62,7 @@ class PessoaPresenter {
       messageNotifier.value = result['error'];
     } else {
       messageNotifier.value = 'Resíduo excluído com sucesso';
-      loadAllResiduos();
+      loadAllPessoas();
     }
   }
 }

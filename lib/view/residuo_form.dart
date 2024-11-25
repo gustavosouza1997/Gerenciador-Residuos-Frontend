@@ -206,7 +206,7 @@ class _ResiduoFormState extends State<ResiduoForm> {
       }
       if (_selectedAcondicionamento == null) {
         errorMessage += 'Selecione um acondicionamento.\n';
-      }      
+      }
       if (_selectedTecnologia == null) {
         errorMessage += 'Selecione uma tecnologia.\n';
       }
@@ -294,8 +294,7 @@ class _ResiduoFormState extends State<ResiduoForm> {
                                     controller: controller,
                                     focusNode: focusNode,
                                     decoration: const InputDecoration(
-                                      labelText: 'Código Resíduo'
-                                    ));
+                                        labelText: 'Código Resíduo'));
                               },
                               itemBuilder: (context, value) {
                                 return ListTile(
@@ -323,8 +322,7 @@ class _ResiduoFormState extends State<ResiduoForm> {
                                     controller: controller,
                                     focusNode: focusNode,
                                     decoration: const InputDecoration(
-                                      labelText: 'Código Unidade'
-                                    ));
+                                        labelText: 'Código Unidade'));
                               },
                               itemBuilder: (context, value) {
                                 return ListTile(
@@ -352,8 +350,7 @@ class _ResiduoFormState extends State<ResiduoForm> {
                                     controller: controller,
                                     focusNode: focusNode,
                                     decoration: const InputDecoration(
-                                      labelText: 'Código Estado Físico'
-                                    ));
+                                        labelText: 'Código Estado Físico'));
                               },
                               itemBuilder: (context, value) {
                                 return ListTile(
@@ -380,8 +377,7 @@ class _ResiduoFormState extends State<ResiduoForm> {
                                     controller: controller,
                                     focusNode: focusNode,
                                     decoration: const InputDecoration(
-                                      labelText: 'Código Classe'
-                                    ));
+                                        labelText: 'Código Classe'));
                               },
                               itemBuilder: (context, value) {
                                 return ListTile(
@@ -409,8 +405,7 @@ class _ResiduoFormState extends State<ResiduoForm> {
                                     controller: controller,
                                     focusNode: focusNode,
                                     decoration: const InputDecoration(
-                                      labelText: 'Código Acondicionamento'
-                                    ));
+                                        labelText: 'Código Acondicionamento'));
                               },
                               itemBuilder: (context, value) {
                                 return ListTile(
@@ -438,8 +433,7 @@ class _ResiduoFormState extends State<ResiduoForm> {
                                     controller: controller,
                                     focusNode: focusNode,
                                     decoration: const InputDecoration(
-                                      labelText: 'Código Tecnologia'
-                                    ));
+                                        labelText: 'Código Tecnologia'));
                               },
                               itemBuilder: (context, value) {
                                 return ListTile(

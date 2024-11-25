@@ -123,7 +123,7 @@ class _PessoaFormState extends State<PessoaForm> {
 
       final Map<String, Object?> pessoa;
 
-      if (_cpfCnpjController.text.length == 9) {
+      if (_cpfCnpjController.text.length == 11) {
         pessoa = {
           'cpf': _cpfCnpjController.text,
           'nome': _nomeRazaoSocialController.text,
@@ -168,8 +168,8 @@ class _PessoaFormState extends State<PessoaForm> {
       final response = await _ibgeService.getUFs();
 
       // Validar e acessar os dados da resposta
-      if (response.containsKey('pessoas')) {
-        ufOptions = (response['pessoas'] as List<dynamic>)
+      if (response.containsKey('ibge')) {
+        ufOptions = (response['ibge'] as List<dynamic>)
             .map((item) => {
                   'sigla': item['sigla'],
                   'nome': item['nome'],
@@ -192,10 +192,9 @@ class _PessoaFormState extends State<PessoaForm> {
   Future<void> _loadMunicipiosOptions(String uf) async {
     try {
       final response = await _ibgeService.getCities(uf);
-
       // Validar e acessar os dados da resposta
-      if (response.containsKey('pessoas')) {
-        municipioOptions = (response['pessoas'] as List<dynamic>)
+      if (response.containsKey('ibge')) {
+        municipioOptions = (response['ibge'] as List<dynamic>)
             .map((item) => {
                   'id': item['id'].toString(),
                   'nome': item['nome'],
@@ -232,7 +231,7 @@ class _PessoaFormState extends State<PessoaForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF22C55E),
-      appBar: const CustomAppBar(titulo: 'Cadastrar Veículos'),
+      appBar: const CustomAppBar(titulo: 'Cadastrar Pessoa'),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
@@ -298,8 +297,8 @@ class _PessoaFormState extends State<PessoaForm> {
                         },
                         itemBuilder: (context, value) {
                           return ListTile(
-                            title: Text(
-                                '${value['codigo']} - ${value['descricao']} '),
+                            title:
+                                Text('${value['sigla']} - ${value['nome']} '),
                           );
                         },
                         onSelected: (selection) async {
@@ -308,13 +307,13 @@ class _PessoaFormState extends State<PessoaForm> {
                             _ufController.text =
                                 '${selection['sigla']} - ${selection['nome']}';
                           });
-                          await _loadMunicipiosOptions(_uf!);
+                          _loadMunicipiosOptions(_uf!);
                         },
                       ),
                       TypeAheadField<Map<String, dynamic>>(
                         suggestionsCallback: (search) => municipioOptions
                             .where((option) =>
-                                option['descricao'].toString().contains(search))
+                                option['nome'].toString().contains(search))
                             .toList(),
                         controller: _municipioController,
                         builder: (context, controller, focusNode) {

@@ -20,7 +20,7 @@ class _VeiculoFormState extends State<VeiculoForm> {
 
   late bool _isLoading;
 
- @override
+  @override
   void initState() {
     super.initState();
     _initializeData();
@@ -50,17 +50,17 @@ class _VeiculoFormState extends State<VeiculoForm> {
     }
   }
 
-   void _loadVeiculoData(Map<String, dynamic> veiculo) {
+  void _loadVeiculoData(Map<String, dynamic> veiculo) {
     _placaController.text = veiculo['placa'] ?? '';
     _marcaController.text = veiculo['marca'] ?? '';
     _modeloController.text = veiculo['modelo'] ?? '';
-   }
+  }
 
-   void _resetFormFields() {
-      _placaController.clear();
-      _marcaController.clear();
-      _modeloController.clear();
-   }
+  void _resetFormFields() {
+    _placaController.clear();
+    _marcaController.clear();
+    _modeloController.clear();
+  }
 
   void _saveVeiculo() {
     if (_formKey.currentState!.validate()) {
@@ -80,53 +80,52 @@ class _VeiculoFormState extends State<VeiculoForm> {
       backgroundColor: const Color(0xFF22C55E),
       appBar: const CustomAppBar(titulo: 'Cadastrar Veículos'),
       body: _isLoading
-      ? const Center(child: CircularProgressIndicator())
-      : Center(
-        child: Container(
-          padding: const EdgeInsets.all(24.0),
-          width: MediaQuery.of(context).size.width * 0.9,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _placaController,
-                decoration: const InputDecoration(labelText: 'Placa'),
-                validator: (value) => value!.isEmpty
-                    ? 'Por favor, insira a placa do veículo'
-                    : null,
+          ? const Center(child: CircularProgressIndicator())
+          : Center(
+              child: Container(
+                padding: const EdgeInsets.all(24.0),
+                width: MediaQuery.of(context).size.width * 0.9,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: _placaController,
+                        decoration: const InputDecoration(labelText: 'Placa'),
+                        validator: (value) => value!.isEmpty
+                            ? 'Por favor, insira a placa do veículo'
+                            : null,
+                      ),
+                      TextFormField(
+                        controller: _marcaController,
+                        decoration: const InputDecoration(labelText: 'Marca'),
+                        validator: (value) => value!.isEmpty
+                            ? 'Por favor, insira a marca do veículo'
+                            : null,
+                      ),
+                      TextFormField(
+                        controller: _modeloController,
+                        decoration: const InputDecoration(labelText: 'Modelo'),
+                        keyboardType: TextInputType.number,
+                        validator: (value) => value!.isEmpty
+                            ? 'Por favor, insira o modelo do veículo'
+                            : null,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: _saveVeiculo,
+                        child: const Text('Salvar'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              TextFormField(
-                controller: _marcaController,
-                decoration: const InputDecoration(labelText: 'Marca'),
-                validator: (value) => value!.isEmpty
-                    ? 'Por favor, insira a marca do veículo'
-                    : null,
-              ),
-              TextFormField(
-                controller: _modeloController,
-                decoration: const InputDecoration(labelText: 'Modelo'),
-                keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty
-                    ? 'Por favor, insira o modelo do veículo'
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _saveVeiculo,
-                child: const Text('Salvar'),
-              ),
-            ],
-          ),
-        ),
-          ),
-        
-      ),
+            ),
     );
   }
 }

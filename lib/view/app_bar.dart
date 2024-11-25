@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'main_view.dart';
 import 'veiculo_view.dart';
-import 'fepam_form.dart';
+import 'pessoa_view.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String titulo;
@@ -18,21 +18,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onSelected: (String value) {
             switch (value) {
               case 'Resíduos':
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MainView()),
-                  );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainView()),
+                );
                 break;
               case 'Veículos':
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const VeiculoView()),
+                  context,
+                  MaterialPageRoute(builder: (context) => const VeiculoView()),
                 );
                 break;
-              case 'FEPAM':
+              case 'Pessoas':
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const FepamForm()),
+                  context,
+                  MaterialPageRoute(builder: (context) => const PessoaView()),
                 );
                 break;
               default:
@@ -50,8 +50,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Text('Veículos'),
               ),
               const PopupMenuItem<String>(
-                value: 'FEPAM',
-                child: Text('FEPAM'),
+                value: 'Pessoas',
+                child: Text('Pessoas'),
               ),
             ];
           },

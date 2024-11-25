@@ -54,7 +54,8 @@ class ResiduoPresenter {
   }
 
   // Atualizar um resíduo
-  Future<void> updateResiduo(String id, Map<String, dynamic> updatedData) async {
+  Future<void> updateResiduo(
+      String id, Map<String, dynamic> updatedData) async {
     messageNotifier.value = 'Atualizando resíduo...';
 
     final result = await residuoService.updateResiduo(id, updatedData);

@@ -70,7 +70,7 @@ class PessoaService {
         final decodedResponse = json.decode(response.body);
 
         if (decodedResponse is List) {
-          return {'residuos': decodedResponse};
+          return {'pessoas': decodedResponse};
         } else if (decodedResponse is Map<String, dynamic>) {
           return decodedResponse;
         } else {

@@ -18,16 +18,18 @@ class IBGEService {
 
   Future<Map<String, dynamic>> getUFs() async {
     final headers = await _getHeaders();
-    final response = await http.get(Uri.parse('$apiUrl/api/ibge'),
-        headers: headers);
+    final response =
+        await http.get(Uri.parse('$apiUrl/api/ibge'), headers: headers);
 
     return _processResponse(response);
   }
 
   Future<Map<String, dynamic>> getCities(String uf) async {
+    print(uf);
+
     final headers = await _getHeaders();
-    final response = await http.get(Uri.parse('$apiUrl/api/ibge/$uf/municipios'),
-        headers: headers);
+    final response =
+        await http.get(Uri.parse('$apiUrl/api/ibge/$uf'), headers: headers);
 
     return _processResponse(response);
   }
@@ -41,7 +43,7 @@ class IBGEService {
         final decodedResponse = json.decode(response.body);
 
         if (decodedResponse is List) {
-          return {'pessoas': decodedResponse};
+          return {'ibge': decodedResponse};
         } else if (decodedResponse is Map<String, dynamic>) {
           return decodedResponse;
         } else {

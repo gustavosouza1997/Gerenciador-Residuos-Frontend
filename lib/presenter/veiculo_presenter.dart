@@ -40,7 +40,8 @@ class VeiculoPresenter {
   }
 
   // Atualizar um Veículo
-  Future<void> updateVeiculo(String id, Map<String, dynamic> updatedData) async {
+  Future<void> updateVeiculo(
+      String id, Map<String, dynamic> updatedData) async {
     messageNotifier.value = 'Atualizando Veículo...';
 
     final result = await veiculoService.updateVeiculo(id, updatedData);

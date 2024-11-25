@@ -28,7 +28,7 @@ class _LoginViewState extends State<LoginView> {
       context: context,
     );
   }
-  
+
   void _navigateToMainView() {
     Navigator.pushReplacement(
       context,
@@ -73,8 +73,7 @@ class _LoginViewState extends State<LoginView> {
                       emailController.text, passwordController.text);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(
-                      0xFF22C55E),
+                  backgroundColor: const Color(0xFF22C55E),
                 ),
                 child: const Text('Entrar'),
               ),
