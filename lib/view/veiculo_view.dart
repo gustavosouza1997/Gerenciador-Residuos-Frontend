@@ -1,59 +1,59 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:gerenciador_residuos_front/view/app_bar.dart';
-import 'residuo_form.dart';
-import '../services/residuo_service.dart';
-import '../presenter/residuo_presenter.dart';
+import 'veiculo_form.dart';
+import 'app_bar.dart';
+import '../services/veiculo_service.dart';
+import '../presenter/veiculo_presenter.dart';
 
-class MainView extends StatefulWidget {
-  const MainView({super.key});
+class VeiculoView extends StatefulWidget {
+  const VeiculoView({super.key});
 
   @override
-  _MainViewState createState() => _MainViewState();
+  _VeiculoViewState createState() => _VeiculoViewState();
 }
 
-class _MainViewState extends State<MainView> {
-  final ResiduoService _residuoService = ResiduoService();
-  late ResiduoPresenter _presenter;
-  List<dynamic> residuos = [];
+class _VeiculoViewState extends State<VeiculoView> {
+  final VeiculoService _veiculoService = VeiculoService();
+  late VeiculoPresenter _presenter;
+  List<dynamic> veiculo = [];
 
   @override
   void initState() {
     super.initState();
 
     // Inicializando o Presenter com os ValueNotifiers
-    _presenter = ResiduoPresenter(
-      residuoService: _residuoService,
+    _presenter = VeiculoPresenter(
+      veiculoService: _veiculoService,
       messageNotifier: ValueNotifier(''),
-      residuosNotifier: ValueNotifier(residuos),
+      veiculoNotifier: ValueNotifier(veiculo),
     );
 
     // Carregar apenas resíduos não enviados
-    _presenter.loadResiduosNaoEnviados();
+    _presenter.loadAllVeiculos();
   }
 
-  Future<void> _deleteResiduo(String id) async {
-    await _presenter.deleteResiduo(id);
-    _presenter.loadResiduosNaoEnviados();
+  Future<void> _deleteVeiculo(String id) async {
+    await _presenter.deleteVeiculo(id);
+    _presenter.loadAllVeiculos();
   }
 
-  void _editResiduo(String id, dynamic residuo) async {
+  void _editVeiculo(String id, dynamic veiculo) async {
     final atualizado = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ResiduoForm(residuo: residuo)),
+      MaterialPageRoute(builder: (context) => VeiculoForm(veiculo: veiculo)),
     );
 
     if (atualizado != null) {
-      _presenter.updateResiduo(id, atualizado);
-      _presenter.loadResiduosNaoEnviados();
+      _presenter.updateVeiculo(id, atualizado);
+      _presenter.loadAllVeiculos();
     }
   }
 
   @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: const CustomAppBar(titulo: 'Resíduos não enviados'),
+    appBar: const CustomAppBar(titulo: 'Veículos'),
     body: Container(
       color: const Color(0xFF22C55E), // Background verde
       child: Column(
@@ -72,7 +72,7 @@ Widget build(BuildContext context) {
             },
           ),
           Expanded(
-            // Exibir tabela de resíduos dentro de um container branco
+            // Exibir tabela de veículos dentro de um container branco
             child: Container(
               margin: const EdgeInsets.all(16.0),
               padding: const EdgeInsets.all(8.0),
@@ -88,37 +88,37 @@ Widget build(BuildContext context) {
                 ],
               ),
               child: ValueListenableBuilder<List<dynamic>>(
-                valueListenable: _presenter.residuosNotifier,
-                builder: (context, residuos, child) {
-                  if (residuos.isEmpty) {
+                valueListenable: _presenter.veiculoNotifier,
+                builder: (context, veiculos, child) {
+                  if (veiculos.isEmpty) {
                     return const Center(
-                      child: Text('Nenhum resíduo não enviado encontrado.'),
+                      child: Text('Nenhum veículo encontrado.'),
                     );
                   }
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal, // Scroll horizontal para caber todas as colunas
                     child: DataTable(
                       columns: const [
-                        DataColumn(label: Text('Nome')),
-                        DataColumn(label: Text('Quantidade')),
+                        DataColumn(label: Text('Placa')),
+                        DataColumn(label: Text('Modelo')),
                         DataColumn(label: Text('Ações')),
                       ],
-                      rows: residuos.map((residuo) {
+                      rows: veiculos.map((veiculo) {
                         return DataRow(cells: [
-                          DataCell(Text(residuo['nomeResiduo'])),
-                          DataCell(Text(residuo['quantidade'].toString())),
+                          DataCell(Text(veiculo['placa'])),
+                          DataCell(Text(veiculo['modelo'])),
                           DataCell(Row(
                             children: [
                               IconButton(
                                 icon: const Icon(Icons.edit, color: Colors.blue),
                                 onPressed: () {
-                                  _editResiduo(residuo['id'], residuo);
+                                  _editVeiculo(veiculo['id'], veiculo);
                                 },
                               ),
                               IconButton(
                                 icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
-                                  _deleteResiduo(residuo['id']);
+                                  _deleteVeiculo(veiculo['id']);
                                 },
                               ),
                             ],
@@ -136,14 +136,14 @@ Widget build(BuildContext context) {
     ),
     floatingActionButton: FloatingActionButton(
       onPressed: () async {
-        final novoResiduo = await Navigator.push(
+        final novoVeiculo = await Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ResiduoForm()),
+          MaterialPageRoute(builder: (context) => const VeiculoForm()),
         );
 
-        if (novoResiduo != null) {
-          _presenter.createResiduo(novoResiduo);
-          _presenter.loadResiduosNaoEnviados(); // Atualizar lista após criar
+        if (novoVeiculo != null) {
+          _presenter.createVeiculo(novoVeiculo);
+          _presenter.loadAllVeiculos();
         }
       },
       backgroundColor: const Color(0xFF22C55E),
@@ -151,5 +151,4 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 }

@@ -18,24 +18,23 @@ class LoginPresenter {
     required this.context,
   });
 
-  // Função de login
   Future<void> login(String email, String password) async {
     messageNotifier.value = 'Processando...';
 
     final result = await authService.login(email, password);
-    
+
     if (result.containsKey('error')) {
       messageNotifier.value = result['error'];
     } else {
       messageNotifier.value = result['message'];
       // Navegar para a MainView após o login bem-sucedido
       if (result['message'] == 'Login realizado com sucesso') {
+        await checkFepamCredentials();
         navigateToMainView();
       }
     }
   }
 
-  // Função de logout
   Future<void> logout() async {
     final result = await authService.logout();
 
@@ -52,14 +51,12 @@ class LoginPresenter {
     final isConfigured = prefs.getBool('isFepamConfigured') ?? false;
 
     if (!isConfigured) {
-      // Se não configurado, exibe o formulário
       final success = await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const FepamForm()),
       );
 
       if (success != true) {
-        // Fecha o app caso o usuário não configure a FEPAM
         Navigator.pop(context);
       }
     }

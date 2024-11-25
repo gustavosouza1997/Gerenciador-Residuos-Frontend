@@ -27,12 +27,8 @@ class _LoginViewState extends State<LoginView> {
       navigateToMainView: _navigateToMainView,
       context: context,
     );
-
-    // Verificar credenciais da FEPAM
-    _presenter.checkFepamCredentials();
   }
-
-  // Função para navegar para a tela MainView
+  
   void _navigateToMainView() {
     Navigator.pushReplacement(
       context,
@@ -43,19 +39,21 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF22C55E), // Set background color
+      backgroundColor: const Color(0xFF22C55E),
       body: Center(
-        child: Container( // Container for the white frame
+        child: Container(
+          // Container for the white frame
           padding: const EdgeInsets.all(24.0),
           width: MediaQuery.of(context).size.width * 0.9,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0), // Add rounded corners
+            borderRadius: BorderRadius.circular(10.0),
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // Center content vertically
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset('assets/logo.png',
+              Image.asset(
+                'assets/logo.png',
                 width: 200,
                 height: 200,
               ),
@@ -71,10 +69,12 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  await _presenter.login(emailController.text, passwordController.text);
+                  await _presenter.login(
+                      emailController.text, passwordController.text);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF22C55E), // Set button color same as background
+                  backgroundColor: const Color(
+                      0xFF22C55E),
                 ),
                 child: const Text('Entrar'),
               ),
@@ -82,7 +82,8 @@ class _LoginViewState extends State<LoginView> {
               ValueListenableBuilder<String>(
                 valueListenable: messageNotifier,
                 builder: (context, message, child) {
-                  return Text(message, style: const TextStyle(color: Colors.red));
+                  return Text(message,
+                      style: const TextStyle(color: Colors.red));
                 },
               ),
             ],

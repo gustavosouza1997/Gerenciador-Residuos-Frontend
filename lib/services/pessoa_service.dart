@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class VeiculoService {
+class PessoaService {
   final String apiUrl = dotenv.env['API_URL'] ?? 'URL não definida';
 
   Future<Map<String, String>> _getHeaders() async {
@@ -16,34 +16,34 @@ class VeiculoService {
     };
   }
 
-  // Método para criar um veiculo
-  Future<Map<String, dynamic>> createVeiculo(
-      Map<String, dynamic> veiculoData) async {
+  // Método para criar uma pessoa
+  Future<Map<String, dynamic>> createPessoa(
+      Map<String, dynamic> pessoaData) async {
     final headers = await _getHeaders();
     final response = await http.post(
-      Uri.parse('$apiUrl/api/veiculo'),
+      Uri.parse('$apiUrl/api/pessoa'),
       headers: headers,
-      body: json.encode(veiculoData),
+      body: json.encode(pessoaData),
     );
 
     return _processResponse(response);
   }
 
-  // Método para obter todos os veiculos
-  Future<Map<String, dynamic>> getAllVeiculo() async {
+  // Método para obter todos as pessoas
+  Future<Map<String, dynamic>> getAllPessoas() async {
     final headers = await _getHeaders();
-    final response = await http.get(Uri.parse('$apiUrl/api/veiculo/listar'),
+    final response = await http.get(Uri.parse('$apiUrl/api/pessoa/listar'),
         headers: headers);
 
     return _processResponse(response);
   }
 
-  // Método para atualizar um veiculo
-  Future<Map<String, dynamic>> updateVeiculo(
+  // Método para atualizar uma pessoa
+  Future<Map<String, dynamic>> updatePessoa(
       String id, Map<String, dynamic> updatedData) async {
     final headers = await _getHeaders();
     final response = await http.put(
-      Uri.parse('$apiUrl/api/veiculo/$id'),
+      Uri.parse('$apiUrl/api/pessoa/$id'),
       headers: headers,
       body: json.encode(updatedData),
     );
@@ -51,10 +51,10 @@ class VeiculoService {
     return _processResponse(response);
   }
 
-  // Método para excluir um veiculo
-  Future<Map<String, dynamic>> deleteVeiculo(String id) async {
+  // Método para excluir uma pessoa
+  Future<Map<String, dynamic>> deletePessoa(String id) async {
     final headers = await _getHeaders();
-    final response = await http.delete(Uri.parse('$apiUrl/api/veiculo/$id'),
+    final response = await http.delete(Uri.parse('$apiUrl/api/pessoa/$id'),
         headers: headers);
 
     return _processResponse(response);
@@ -70,7 +70,7 @@ class VeiculoService {
         final decodedResponse = json.decode(response.body);
 
         if (decodedResponse is List) {
-          return {'veiculos': decodedResponse};
+          return {'residuos': decodedResponse};
         } else if (decodedResponse is Map<String, dynamic>) {
           return decodedResponse;
         } else {

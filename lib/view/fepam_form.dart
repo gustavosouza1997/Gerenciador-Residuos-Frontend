@@ -8,7 +8,6 @@ class FepamForm extends StatefulWidget {
 
   @override
   State<FepamForm> createState() => _FepamFormState();
-
 }
 
 class _FepamFormState extends State<FepamForm> {
@@ -32,43 +31,54 @@ class _FepamFormState extends State<FepamForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Dados FEPAM')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _loginController,
-                decoration: const InputDecoration(labelText: 'Login'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Por favor, insira o login' : null,
+        backgroundColor: const Color(0xFF22C55E),
+        body: Center(
+          child: Container(
+            padding: const EdgeInsets.all(24.0),
+            width: MediaQuery.of(context).size.width * 0.9,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/logo_fepam.png',
+                    width: 200,
+                    height: 200,
+                  ),
+                  TextFormField(
+                    controller: _loginController,
+                    decoration: const InputDecoration(labelText: 'Login'),
+                    validator: (value) =>
+                        value!.isEmpty ? 'Por favor, insira o login' : null,
+                  ),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(labelText: 'Senha'),
+                    obscureText: true,
+                    validator: (value) =>
+                        value!.isEmpty ? 'Por favor, insira a senha' : null,
+                  ),
+                  TextFormField(
+                    controller: _cnpjController,
+                    decoration: const InputDecoration(labelText: 'CNPJ'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) =>
+                        value!.isEmpty ? 'Por favor, insira o CNPJ' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _saveCredentials,
+                    child: const Text('Salvar'),
+                  ),
+                ],
               ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Senha'),
-                obscureText: true,
-                validator: (value) =>
-                    value!.isEmpty ? 'Por favor, insira a senha' : null,
-              ),
-              TextFormField(
-                controller: _cnpjController,
-                decoration: const InputDecoration(labelText: 'CNPJ'),
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                    value!.isEmpty ? 'Por favor, insira o CNPJ' : null,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _saveCredentials,
-
-                child: const Text('Salvar'),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

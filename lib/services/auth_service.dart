@@ -17,7 +17,7 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
-        
+
         // Salvar o token nos SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('authToken', responseBody['token']);

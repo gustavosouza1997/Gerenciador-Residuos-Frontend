@@ -52,15 +52,18 @@ class MTRService {
     );
 
     if (response.statusCode == 200) {
-      List<Map<String, dynamic>> options = List<Map<String, dynamic>>.from(json.decode(response.body));
+      List<Map<String, dynamic>> options =
+          List<Map<String, dynamic>>.from(json.decode(response.body));
 
       // Obtendo a chave do código conforme o endpoint
       String codigoKey = getCodigoKey(endpoint);
 
       // Ordenando a lista conforme a chave do código
       options.sort((a, b) {
-        final codigoA = a[codigoKey] != null ? int.tryParse(a[codigoKey].toString()) : 0;
-        final codigoB = b[codigoKey] != null ? int.tryParse(b[codigoKey].toString()) : 0;
+        final codigoA =
+            a[codigoKey] != null ? int.tryParse(a[codigoKey].toString()) : 0;
+        final codigoB =
+            b[codigoKey] != null ? int.tryParse(b[codigoKey].toString()) : 0;
         return (codigoA ?? 0).compareTo(codigoB ?? 0);
       });
 
@@ -70,10 +73,13 @@ class MTRService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchAcondicionamento() => fetchOptions('acondicionamento');
+  Future<List<Map<String, dynamic>>> fetchAcondicionamento() =>
+      fetchOptions('acondicionamento');
   Future<List<Map<String, dynamic>>> fetchClasse() => fetchOptions('classe');
-  Future<List<Map<String, dynamic>>> fetchEstadoFisico() => fetchOptions('estadoFisico');
+  Future<List<Map<String, dynamic>>> fetchEstadoFisico() =>
+      fetchOptions('estadoFisico');
   Future<List<Map<String, dynamic>>> fetchResiduo() => fetchOptions('residuo');
-  Future<List<Map<String, dynamic>>> fetchTecnologia() => fetchOptions('tecnologia');
+  Future<List<Map<String, dynamic>>> fetchTecnologia() =>
+      fetchOptions('tecnologia');
   Future<List<Map<String, dynamic>>> fetchUnidade() => fetchOptions('unidade');
 }

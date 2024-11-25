@@ -14,10 +14,11 @@ class ResiduoService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-}
+  }
 
   // Método para criar um resíduo
-  Future<Map<String, dynamic>> createResiduo(Map<String, dynamic> residuoData) async {
+  Future<Map<String, dynamic>> createResiduo(
+      Map<String, dynamic> residuoData) async {
     final headers = await _getHeaders();
     final response = await http.post(
       Uri.parse('$apiUrl/api/residuo'),
@@ -31,22 +32,21 @@ class ResiduoService {
   // Método para obter todos os resíduos
   Future<Map<String, dynamic>> getAllResiduos() async {
     final headers = await _getHeaders();
-    final response = await http.get(
-      Uri.parse('$apiUrl/api/residuo/listar'),
-      headers: headers
-    );
+    final response = await http.get(Uri.parse('$apiUrl/api/residuo/listar'),
+        headers: headers);
 
     return _processResponse(response);
   }
 
   // Método para atualizar um resíduo
-  Future<Map<String, dynamic>> updateResiduo(String id, Map<String, dynamic> updatedData) async {
+  Future<Map<String, dynamic>> updateResiduo(
+      String id, Map<String, dynamic> updatedData) async {
     final headers = await _getHeaders();
     final response = await http.put(
       Uri.parse('$apiUrl/api/residuo/$id'),
       headers: headers,
       body: json.encode(updatedData),
-    );   
+    );
 
     return _processResponse(response);
   }
@@ -54,10 +54,8 @@ class ResiduoService {
   // Método para obter resíduos não enviados
   Future<Map<String, dynamic>> getResiduosNaoEnviados() async {
     final headers = await _getHeaders();
-    final response = await http.get(
-      Uri.parse('$apiUrl/api/residuo/nao-enviados'),
-      headers: headers
-    );
+    final response = await http
+        .get(Uri.parse('$apiUrl/api/residuo/nao-enviados'), headers: headers);
 
     return _processResponse(response);
   }
@@ -65,10 +63,8 @@ class ResiduoService {
   // Método para excluir um resíduo
   Future<Map<String, dynamic>> deleteResiduo(String id) async {
     final headers = await _getHeaders();
-    final response = await http.delete(
-      Uri.parse('$apiUrl/api/residuo/$id'),
-      headers: headers
-    );
+    final response = await http.delete(Uri.parse('$apiUrl/api/residuo/$id'),
+        headers: headers);
 
     return _processResponse(response);
   }
@@ -81,7 +77,7 @@ class ResiduoService {
       }
       try {
         final decodedResponse = json.decode(response.body);
-  
+
         if (decodedResponse is List) {
           return {'residuos': decodedResponse};
         } else if (decodedResponse is Map<String, dynamic>) {
@@ -93,7 +89,9 @@ class ResiduoService {
         return {'error': 'Erro ao decodificar JSON: $e'};
       }
     } else {
-      return {'error': 'Erro ao processar a requisição: ${response.statusCode}'};
+      return {
+        'error': 'Erro ao processar a requisição: ${response.statusCode}'
+      };
     }
   }
 }
