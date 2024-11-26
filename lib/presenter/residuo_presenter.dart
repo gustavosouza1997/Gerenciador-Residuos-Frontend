@@ -80,4 +80,33 @@ class ResiduoPresenter {
       loadResiduosNaoEnviados(); // Recarregar após exclusão
     }
   }
+
+  Future<Map<String, List<Map<String, dynamic>>>> getAllResiduos() async {
+    try {
+      final rawResiduos = await residuoService.getAllResiduos();
+      final residuos = (rawResiduos['residuos'] as List<dynamic>).map((item) {
+        return {
+          'id': item['id']?.toString() ?? '',
+          'codManifesto': item['codManifesto']?.toString() ?? '',
+          'codigoAcondicionamento':
+              item['codigoAcondicionamento']?.toString() ?? '',
+          'codigoClasse': item['codigoClasse']?.toString() ?? '',
+          'codigoResiduo': item['codigoResiduo']?.toString() ?? '',
+          'codigoTecnologia': item['codigoTecnologia']?.toString() ?? '',
+          'codigoTipoEstado': item['codigoTipoEstado']?.toString() ?? '',
+          'codigoUnidade': item['codigoUnidade']?.toString() ?? '',
+          'dataCriacao': item['dataCriacao']?.toString() ?? '',
+          'dataEnvio': item['dataEnvio']?.toString() ?? '',
+          'manifestoItemObservacao':
+              item['manifestoItemObservacao']?.toString() ?? '',
+          'nomeResiduo': item['nomeResiduo']?.toString() ?? '',
+          'quantidade': item['quantidade']?.toString() ?? '',
+        };
+      }).toList();
+
+      return {'residuos': residuos};
+    } catch (e) {
+      throw Exception('Erro ao carregar opções: $e');
+    }
+  }
 }

@@ -108,7 +108,9 @@ class _PessoaViewState extends State<PessoaView> {
                           ],
                           rows: pessoas.map((pessoa) {
                             return DataRow(cells: [
-                              DataCell(Text(pessoa['nome'])),
+                              DataCell(Text(pessoa['nome'] ??
+                                  pessoa['razaoSocial'] ??
+                                  '')),
                               DataCell(Row(
                                 children: [
                                   IconButton(

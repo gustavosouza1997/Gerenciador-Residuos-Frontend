@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'main_view.dart';
 import 'veiculo_view.dart';
 import 'pessoa_view.dart';
+import 'mtr_form.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String titulo;
@@ -35,6 +36,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   MaterialPageRoute(builder: (context) => const PessoaView()),
                 );
                 break;
+              case 'MTR':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MtrForm()),
+                );
+                break;
               default:
                 break;
             }
@@ -52,6 +59,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               const PopupMenuItem<String>(
                 value: 'Pessoas',
                 child: Text('Pessoas'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'MTR',
+                child: Text('MTR'),
               ),
             ];
           },

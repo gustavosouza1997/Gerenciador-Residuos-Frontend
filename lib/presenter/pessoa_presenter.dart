@@ -65,4 +65,39 @@ class PessoaPresenter {
       loadAllPessoas();
     }
   }
+
+  Future<Map<String, List<Map<String, dynamic>>>> getAllPessoas() async {
+    try {
+      final rawPessoas = await pessoaService.getAllPessoas();
+      final pessoas = (rawPessoas['pessoas'] as List<dynamic>).map((item) {
+        Map<String, dynamic> pessoaMap = {
+          'id': item['id']?.toString() ?? '',
+          'nome': (item['nome']?.toString() ??
+              item['razaoSocial']?.toString() ??
+              ''),
+          'email': item['email']?.toString() ?? '',
+          'telefone': item['telefone']?.toString() ?? '',
+          'endereco': item['endereco']?.toString() ?? '',
+          'municipio': item['municipio']?.toString() ?? '',
+          'transportador': item['transportador'] ?? false,
+          'gerador': item['gerador'] ?? false,
+          'destinador': item['destinador'] ?? false,
+          'motorista': item['motorista'] ?? false,
+          'uf': item['uf']?.toString() ?? '',
+        };
+
+        if (item.containsKey('cpf')) {
+          pessoaMap['cpf'] = item['cpf']?.toString() ?? '';
+        } else if (item.containsKey('cnpj')) {
+          pessoaMap['cnpj'] = item['cnpj']?.toString() ?? '';
+        }
+
+        return pessoaMap;
+      }).toList();
+
+      return {'pessoas': pessoas};
+    } catch (e) {
+      throw Exception('Erro ao carregar opções: $e');
+    }
+  }
 }

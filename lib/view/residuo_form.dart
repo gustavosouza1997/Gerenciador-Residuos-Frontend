@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'app_bar.dart';
-import '../services/mtr_service.dart';
+import '../presenter/mtr_presenter.dart';
 
 class ResiduoForm extends StatefulWidget {
   final Map<String, dynamic>? residuo;
@@ -15,7 +15,7 @@ class ResiduoForm extends StatefulWidget {
 }
 
 class _ResiduoFormState extends State<ResiduoForm> {
-  final MTRService _mtrService = MTRService();
+  final MTRPresenter _presenter = MTRPresenter();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nomeResiduoController = TextEditingController();
   final TextEditingController _observacaoController = TextEditingController();
@@ -60,7 +60,16 @@ class _ResiduoFormState extends State<ResiduoForm> {
     });
 
     try {
-      await _loadOptions();
+      final options = await _presenter.fetchOptions();
+
+      setState(() {
+        acondicionamentoOptions = options['acondicionamento'] ?? [];
+        classeOptions = options['classe'] ?? [];
+        estadoFisicoOptions = options['estadoFisico'] ?? [];
+        tecnologiaOptions = options['tecnologia'] ?? [];
+        unidadeOptions = options['unidade'] ?? [];
+        residuoOptions = options['residuo'] ?? [];
+      });
 
       if (widget.residuo != null) {
         _loadResiduoData(widget.residuo!);
@@ -97,58 +106,6 @@ class _ResiduoFormState extends State<ResiduoForm> {
     _selectedResiduo = null;
     _selectedTecnologia = null;
     _selectedUnidade = null;
-  }
-
-  Future<void> _loadOptions() async {
-    try {
-      acondicionamentoOptions = (await _mtrService.fetchAcondicionamento())
-          .map((item) => {
-                'codigo': item['tipoCodigo'].toString(),
-                'descricao': item['tipoDescricao'],
-              })
-          .toList();
-
-      classeOptions = (await _mtrService.fetchClasse())
-          .map((item) => {
-                'codigo': item['tpclaCodigo'].toString(),
-                'descricao': item['tpclaDescricao'],
-              })
-          .toList();
-
-      estadoFisicoOptions = (await _mtrService.fetchEstadoFisico())
-          .map((item) => {
-                'codigo': item['tpestCodigo'].toString(),
-                'descricao': item['tpestDescricao'],
-              })
-          .toList();
-
-      tecnologiaOptions = (await _mtrService.fetchTecnologia())
-          .map((item) => {
-                'codigo': item['tipoCodigo'].toString(),
-                'descricao': item['tipoDescricao'],
-              })
-          .toList();
-
-      unidadeOptions = (await _mtrService.fetchUnidade())
-          .map((item) => {
-                'codigo': item['tpuniCodigo'].toString(),
-                'descricao': item['tpuniDescricao'],
-              })
-          .toList();
-
-      residuoOptions = (await _mtrService.fetchResiduo())
-          .map((item) => {
-                'codigo': item['tpre3Numero'],
-                'descricao': item['tpre3Descricao'],
-              })
-          .toList();
-
-      setState(() {});
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar opções: $e')),
-      );
-    }
   }
 
   void _loadResiduoData(Map<String, dynamic> residuo) {

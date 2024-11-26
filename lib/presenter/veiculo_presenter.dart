@@ -66,4 +66,22 @@ class VeiculoPresenter {
       loadAllVeiculos(); // Recarregar após exclusão
     }
   }
+
+  Future<Map<String, List<Map<String, dynamic>>>> getAllVeiculos() async {
+    try {
+      final rawVeiculos = await veiculoService.getAllVeiculo();
+      final veiculos = (rawVeiculos['veiculos'] as List<dynamic>).map((item) {
+        return {
+          'id': item['id']?.toString() ?? '',
+          'marca': (item['marca']?.toString() ?? ''),
+          'modelo': (item['modelo']?.toString() ?? ''),
+          'placa': item['placa']?.toString() ?? '',
+        };
+      }).toList();
+
+      return {'veiculos': veiculos};
+    } catch (e) {
+      throw Exception('Erro ao carregar opções: $e');
+    }
+  }
 }
