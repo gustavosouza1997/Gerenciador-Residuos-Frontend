@@ -31,8 +31,7 @@ class _MtrFormState extends State<MtrForm> {
       TextEditingController();
   final TextEditingController _manifTransportadorPlacaVeiculo =
       TextEditingController();
-  final TextEditingController _nomeEmpresaDestinador =
-      TextEditingController();
+  final TextEditingController _nomeEmpresaDestinador = TextEditingController();
 
   final PessoaService _pessoaService = PessoaService();
   final ResiduoService _residuoService = ResiduoService();
@@ -45,10 +44,11 @@ class _MtrFormState extends State<MtrForm> {
 
   late bool _isLoading;
 
-  List<Map<String, dynamic>> pessoaOptions = [];
-  List<Map<String, dynamic>> veiculoOptions = [];
-  List<Map<String, dynamic>> residuoOptions = [];
-  List<Map<String, dynamic>> residuosSelecionados = [];
+  List<Map<String, dynamic>> _pessoaOptions = [];
+  List<Map<String, dynamic>> _veiculoOptions = [];
+  List<Map<String, dynamic>> _residuoOptions = [];
+
+  final Set<String> _selecionados = <String>{};
 
   @override
   void initState() {
@@ -84,9 +84,9 @@ class _MtrFormState extends State<MtrForm> {
       final residuosOptions = await _residuoPresenter.getAllResiduos();
 
       setState(() {
-        pessoaOptions = pessoasOptions['pessoas'] ?? [];
-        veiculoOptions = veiculosOptions['veiculos'] ?? [];
-        residuoOptions = residuosOptions['residuos'] ?? [];
+        _pessoaOptions = pessoasOptions['pessoas'] ?? [];
+        _veiculoOptions = veiculosOptions['veiculos'] ?? [];
+        _residuoOptions = residuosOptions['residuos'] ?? [];
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -152,6 +152,93 @@ class _MtrFormState extends State<MtrForm> {
                                     ),
                                   ],
                                 ),
+                                child: ValueListenableBuilder<List<dynamic>>(
+                                  valueListenable:
+                                      _residuoPresenter.residuosNotifier,
+                                  builder: (context, residuos, child) {
+                                    final List<dynamic> residuoOption =
+                                        _residuoOptions;
+
+                                    if (residuoOption.isEmpty) {
+                                      return const Center(
+                                        child: Text(
+                                            'Nenhum resíduo não enviado encontrado.'),
+                                      );
+                                    }
+                                    return SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: DataTable(
+                                        columnSpacing: 35,
+                                        columns: const [
+                                          DataColumn(label: SizedBox(width: 24)),
+                                          DataColumn(label: Text('Resíduo')),
+                                          DataColumn(label: Text('Quant.')),
+                                        ],
+                                        rows: residuoOption.map((residuo) {
+                                          final String residuoId =
+                                              residuo['id'];
+                                          final bool isSelecionado =
+                                              _selecionados.contains(residuoId);
+
+                                          return DataRow(
+                                            cells: [
+                                              DataCell(
+                                                Checkbox(
+                                                  value: isSelecionado,
+                                                  onChanged: (bool? checked) {
+                                                    setState(() {
+                                                      if (checked == true) {
+                                                        _selecionados
+                                                            .add(residuoId);
+                                                      } else {
+                                                        _selecionados
+                                                            .remove(residuoId);
+                                                      }
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              DataCell(
+                                                SizedBox(
+                                                  width: 60,
+                                                  child: Text(
+                                                    residuo['nomeResiduo'] ??
+                                                        '',
+                                                        overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                              DataCell(Text(
+                                                  residuo['quantidade']
+                                                          ?.toString() ??
+                                                      '0')),
+                                            ],
+                                          );
+                                        }).toList(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 20.0, horizontal: 16.0),
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                    width: 1.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
                                 child: Column(
                                   children: [
                                     const Text(
@@ -164,7 +251,7 @@ class _MtrFormState extends State<MtrForm> {
                                     ),
                                     TypeAheadField<Map<String, dynamic>>(
                                       suggestionsCallback: (search) =>
-                                          pessoaOptions
+                                          _pessoaOptions
                                               .where((option) =>
                                                   option.containsKey('cnpj') &&
                                                   option['cnpj'] != null &&
@@ -202,7 +289,7 @@ class _MtrFormState extends State<MtrForm> {
                                     ),
                                     TypeAheadField<Map<String, dynamic>>(
                                       suggestionsCallback: (search) =>
-                                          pessoaOptions
+                                          _pessoaOptions
                                               .where((option) =>
                                                   option.containsKey('cpf') &&
                                                   option['cpf'] != null &&
@@ -240,7 +327,8 @@ class _MtrFormState extends State<MtrForm> {
                                     TextField(
                                       controller: _manifGeradorCargoResponsavel,
                                       decoration: const InputDecoration(
-                                        labelText: 'Cargo do Responsável pela Emissão',
+                                        labelText:
+                                            'Cargo do Responsável pela Emissão',
                                       ),
                                     ),
                                   ],
@@ -277,10 +365,9 @@ class _MtrFormState extends State<MtrForm> {
                                     ),
                                     TypeAheadField<Map<String, dynamic>>(
                                       suggestionsCallback: (search) =>
-                                          pessoaOptions
+                                          _pessoaOptions
                                               .where((option) =>
-                                                  option.containsKey(
-                                                      'cnpj') &&
+                                                  option.containsKey('cnpj') &&
                                                   option['cnpj'] != null &&
                                                   option['cnpj']
                                                       .toString()
@@ -317,7 +404,7 @@ class _MtrFormState extends State<MtrForm> {
                                     ),
                                     TypeAheadField<Map<String, dynamic>>(
                                       suggestionsCallback: (search) =>
-                                          pessoaOptions
+                                          _pessoaOptions
                                               .where((option) =>
                                                   option.containsKey('cpf') &&
                                                   option['cpf'] != null &&
@@ -355,12 +442,10 @@ class _MtrFormState extends State<MtrForm> {
                                     ),
                                     TypeAheadField<Map<String, dynamic>>(
                                       suggestionsCallback: (search) =>
-                                          veiculoOptions
-                                              .where((option) =>
-                                        
-                                                  option['placa']
-                                                      .toString()
-                                                      .contains(search))
+                                          _veiculoOptions
+                                              .where((option) => option['placa']
+                                                  .toString()
+                                                  .contains(search))
                                               .toList(),
                                       controller:
                                           _manifTransportadorPlacaVeiculo,
@@ -382,8 +467,8 @@ class _MtrFormState extends State<MtrForm> {
                                       },
                                       onSelected: (selection) {
                                         setState(() {
-                                          _manifTransportadorPlacaVeiculo
-                                              .text = selection['placa'];
+                                          _manifTransportadorPlacaVeiculo.text =
+                                              selection['placa'];
                                         });
                                       },
                                     ),
@@ -421,10 +506,9 @@ class _MtrFormState extends State<MtrForm> {
                                     ),
                                     TypeAheadField<Map<String, dynamic>>(
                                       suggestionsCallback: (search) =>
-                                          pessoaOptions
+                                          _pessoaOptions
                                               .where((option) =>
-                                                  option.containsKey(
-                                                      'cnpj') &&
+                                                  option.containsKey('cnpj') &&
                                                   option['cnpj'] != null &&
                                                   option['cnpj']
                                                       .toString()

@@ -83,7 +83,7 @@ class ResiduoPresenter {
 
   Future<Map<String, List<Map<String, dynamic>>>> getAllResiduos() async {
     try {
-      final rawResiduos = await residuoService.getAllResiduos();
+      final rawResiduos = await residuoService.getResiduosNaoEnviados();
       final residuos = (rawResiduos['residuos'] as List<dynamic>).map((item) {
         return {
           'id': item['id']?.toString() ?? '',

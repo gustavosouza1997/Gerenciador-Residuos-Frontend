@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gerenciador_residuos_front/view/fepam_form.dart';
 import 'main_view.dart';
 import 'veiculo_view.dart';
 import 'pessoa_view.dart';
@@ -42,6 +43,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   MaterialPageRoute(builder: (context) => const MtrForm()),
                 );
                 break;
+                case 'FEPAM':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FepamForm()),
+                );
+                break;
               default:
                 break;
             }
@@ -63,6 +70,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               const PopupMenuItem<String>(
                 value: 'MTR',
                 child: Text('MTR'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'FEPAM',
+                child: Text('FEPAM'),
               ),
             ];
           },
