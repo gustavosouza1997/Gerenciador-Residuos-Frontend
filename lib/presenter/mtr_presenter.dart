@@ -60,4 +60,13 @@ class MTRPresenter {
       throw Exception('Erro ao carregar opções: $e');
     }
   }
+
+  Future<List<Map<String, dynamic>>> salvarManifesto(Map<String, dynamic> manifestoDto) async {
+    try {
+      final result = await _mtrService.salvarManifestoLote(manifestoDto);
+      return result;
+    } catch (e) {
+      throw Exception('Erro ao salvar manifesto: $e');
+    }
+  }
 }

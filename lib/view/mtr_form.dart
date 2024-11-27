@@ -9,6 +9,7 @@ import '../presenter/veiculo_presenter.dart';
 import '../services/pessoa_service.dart';
 import '../services/residuo_service.dart';
 import '../services/veiculo_service.dart';
+import '../presenter/mtr_presenter.dart';
 
 class MtrForm extends StatefulWidget {
   const MtrForm({super.key});
@@ -37,7 +38,7 @@ class _MtrFormState extends State<MtrForm> {
   final ResiduoService _residuoService = ResiduoService();
   final VeiculoService _veiculoService = VeiculoService();
 
-  //final MTRPresenter _mtrPresenter = MTRPresenter();
+  final MTRPresenter _mtrPresenter = MTRPresenter();
   late final PessoaPresenter _pessoaPresenter;
   late final ResiduoPresenter _residuoPresenter;
   late final VeiculoPresenter _veiculoPresenter;
@@ -48,7 +49,7 @@ class _MtrFormState extends State<MtrForm> {
   List<Map<String, dynamic>> _veiculoOptions = [];
   List<Map<String, dynamic>> _residuoOptions = [];
 
-  final Set<String> _selecionados = <String>{};
+  final Set<Map<String, dynamic>> _selecionados = <Map<String, dynamic>>{};
 
   @override
   void initState() {
@@ -101,7 +102,61 @@ class _MtrFormState extends State<MtrForm> {
     }
   }
 
-  void _enviarMTR() {}
+  void _enviarMTR() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        final manifestoDto = {
+          'manifestoJSONDtos': [
+            {
+              'cnpTransportador': _pessoaOptions
+                  .firstWhere((p) => p['nome'] == _nomeEmpresaTransportador.text)['cnpj'],
+              'codUnidadeTransportador': '24552',
+              'cnpDestinador': _pessoaOptions
+                  .firstWhere((p) => p['nome'] == _nomeEmpresaDestinador.text)['cnpj'],
+              'codUnidadeDestinador': '24552',
+              'manifTransportadorDataExpedicao': 
+                  DateTime.now().toString().replaceAll(RegExp(r'[^0-9]'), '').substring(0, 8),
+              'manifTransportadorNomeMotorista': _manifTransportadorNomeMotorista.text,
+              'manifTransportadorPlacaVeiculo': _manifTransportadorPlacaVeiculo.text,
+              'manifGeradorNomeResponsavel': _manifGeradorNomeResponsavel.text,
+              'manifGeradorCargoResponsavel': _manifGeradorCargoResponsavel.text,
+              'itemManifestoJSONs': _selecionados.toList().asMap().entries.map((entry) {
+                final index = entry.key;
+                final residuo = entry.value;
+                
+                return {
+                  'codigoSequencial': (index + 1),
+                  'residuo': residuo['codigoResiduo'],
+                  'quantidade': num.tryParse(residuo['quantidade'].toString()) ?? 0,
+                  'codigoUnidade': num.tryParse(residuo['codigoUnidade'].toString()) ?? 1,
+                  'codigoTipoEstado': num.tryParse(residuo['codigoTipoEstado'].toString()) ?? 1,
+                  'codigoClasse': num.tryParse(residuo['codigoClasse'].toString()) ?? 1,
+                  'codigoAcondicionamento': num.tryParse(residuo['codigoAcondicionamento'].toString()) ?? 1,
+                  'codigoTecnologia': num.tryParse(residuo['codigoTecnologia'].toString()) ?? 1,
+                  'manifestoItemObservacao': residuo['manifestoItemObservacao'] ?? '',
+                };
+              }).toList(),
+            }
+          ]
+        };
+
+        final result = await _mtrPresenter.salvarManifesto(manifestoDto);
+        
+        String mensagem = 'MTR enviado com sucesso!';
+        if (result.isNotEmpty && result[0].containsKey('manifestoCodigo')) {
+          mensagem += ' Código: ${result[0]['manifestoCodigo']}';
+        }
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(mensagem)),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao enviar MTR: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,10 +230,8 @@ class _MtrFormState extends State<MtrForm> {
                                           DataColumn(label: Text('Quant.')),
                                         ],
                                         rows: residuoOption.map((residuo) {
-                                          final String residuoId =
-                                              residuo['id'];
-                                          final bool isSelecionado =
-                                              _selecionados.contains(residuoId);
+                                          final bool isSelecionado = _selecionados
+                                              .any((r) => r['id'] == residuo['id']);
 
                                           return DataRow(
                                             cells: [
@@ -188,16 +241,16 @@ class _MtrFormState extends State<MtrForm> {
                                                   onChanged: (bool? checked) {
                                                     setState(() {
                                                       if (checked == true) {
-                                                        _selecionados
-                                                            .add(residuoId);
+                                                        _selecionados.add(residuo);
                                                       } else {
-                                                        _selecionados
-                                                            .remove(residuoId);
+                                                        _selecionados.removeWhere(
+                                                          (r) => r['id'] == residuo['id']
+                                                        );
                                                       }
-                                                      });
-                                                    },
-                                                  ),
+                                                    });
+                                                  },
                                                 ),
+                                              ),
                                               DataCell(
                                                 SizedBox(
                                                   width: 60,
